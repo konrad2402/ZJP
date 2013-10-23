@@ -12,7 +12,7 @@ mpicalka.o: mpicalka.c
 
 run:
 	mpirun -np 4 ./mpicalka
-	./calka
+	./calka 1000000 -2 2
 	
 clear:
 	rm -r *.o
