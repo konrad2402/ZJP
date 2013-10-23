@@ -1,4 +1,4 @@
-all: calkaa mpicalkaa run 
+all: calkaa mpicalkaa 
 
 calkaa: calka.o
 	gcc -o calka calka.c -lm
@@ -11,7 +11,7 @@ mpicalka.o: mpicalka.c
 	mpicc -c mpicalka.c -lm
 
 run:
-	mpirun -np 4 ./mpicalka
+	mpirun -np 4 ./mpicalka 1000000 -2 2
 	./calka 1000000 -2 2
 	
 clear:

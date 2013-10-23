@@ -3,10 +3,6 @@
 #include "mpi.h"
 #include <time.h>
 
-#define N 1000000
-#define X -2
-#define Y 2
-
 double f (double x){
 	return pow(M_E, -x*x);
 }
