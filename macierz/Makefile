@@ -11,7 +11,7 @@ mpimacierz.o: mpimacierz.c
 	mpicc -c mpimacierz.c -lm
 
 run:
-	mpirun -np 4 mpimacierz 7
+	mpirun -np 3 mpimacierz 3
 	./macierz 400
 	
 clear:

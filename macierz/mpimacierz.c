@@ -6,11 +6,11 @@ int randome(){
 	int a = rand()%10;
 	return a;
 }
-void wypisz(long int x){
-	if (x >= 1000) printf("%ld ", x);
-	else if (x >= 100) printf("%ld  ", x);
-	else if (x >= 10) printf("%ld   ", x);
-	else printf("%ld    ", x);
+void wypisz(int x){
+	if (x >= 1000) printf("%d ", x);
+	else if (x >= 100) printf("%d  ", x);
+	else if (x >= 10) printf("%d   ", x);
+	else printf("%d    ", x);
 }
 
 int main(int argc, char **argv){
@@ -35,37 +35,49 @@ int main(int argc, char **argv){
             tmp = size - tmp;
             n = n + tmp;
 		}
-		long int macierz1[n*n+5], wektor[n*n+5], wynik[n*n+5], pomocnicza[n*n+5], pomoc2[n*n+5];
-		pomocnicza[0] = 0;
+		 int macierz1[n*n+5], wektor[n*n+5], wynik[n*n+5], pomocnicza[n*n+5], pomoc2[n*n+5];
 		wycinek = (n*n)/size;
 		for(j=0;j<n;j++){          
-           wektor[j]=j+1;
+			wektor[j]=1+j;
+			pomocnicza[j] = 0;
+			//pomoc2[j]=100;
            }
 		 if (rank == 0){ 
 				srand(time(NULL)); // zapewnia losowanie roznych liczb
                 int liczba = atoi(argv[1]); // n bez zer
                         for (i = 0; i<n*n; i++){ 
                                 lol++;   
-                                if(i>=((n*n)-(n*tmp))) macierz1[i]=0;
+                                if(i>=((n*n)-(n*tmp))) macierz1[i]=0; // na dole macierzy
                                 else if(lol-1<liczba) macierz1[i]=i;  
                                 else if (lol<=n) macierz1[i]=0; 
                                 else if(lol>=n+1){
                                         lol=0; i--;
                                 }
                         }
+                        /*
+						for (i = 0; i<n*n; i++){ 
+							printf("i:%d %d  ",i,macierz1[i]);
+							if(i!=0&&(((i+1)%n)==0)) {
+									printf("\n");
+							}
+                        }
+                        */
                     }
-		
+					
+					 
+		 wycinek = (n*n)/size;
         MPI_Scatter( &macierz1 , wycinek  , MPI_INT , &pomoc2, wycinek  , MPI_INT , 0 , MPI_COMM_WORLD);
 		j = n/size;
         for (i=0; i<wycinek; i++){
                 if(a>=n) {a=0; b++; }
                 pomocnicza[b]=pomocnicza[b]+(pomoc2[i]*wektor[a]);
+				//printf("i:%d proces: %d  pomoc2: %d \n",i,rank,pomoc2[i]);
                 a++;
         }
 		
         MPI_Gather(&pomocnicza,j, MPI_INT, &wynik,j, MPI_INT, 0, MPI_COMM_WORLD);
         if (rank == 0){
-		/* WYPISANIE MACIERZY */
+		/* WYPISANIE MACIERZY*/
         
 			int lala = atoi(argv[1]);
 			k = lala;
@@ -84,10 +96,11 @@ int main(int argc, char **argv){
 				else printf("     ");	
 				wypisz(wynik[i]);
 				printf("\n");
-			}
+			} 
 		stop=clock();
 		timee=(stop - start);
-		printf("Czas wykonania algorytmu to: %ld\n", stop-start);
+		printf("\nCzas wykonania algorytmu to: %ld\n", stop-start);
 		}
+		MPI_Finalize();
         return 0;
 }

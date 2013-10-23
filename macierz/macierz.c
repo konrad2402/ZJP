@@ -43,7 +43,7 @@ int main(int argc, char **argv){
 		}	
 	}
 		printf("\n");
-	/* WYPISANIE MACIERZY */
+	/* WYPISANIE MACIERZY 
 	i = 0;
 	for(i;i<x;i++){
 		long int j = 0;
@@ -57,7 +57,7 @@ int main(int argc, char **argv){
 		else printf("     ");	
 		wypisz(wynik[i]);
 		printf("\n");
-	}
+	}*/
 	stop=clock();
     timee=(stop - start);
 	printf("Czas wykonania algorytmu to: %ld\n", stop-start);

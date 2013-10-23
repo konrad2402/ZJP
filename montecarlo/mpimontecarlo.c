@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 	int size;
 	long int n=atoi(argv[1]);
 	double x,y;
-	int count=0;
+	int wynik=0;
 	double z;
 	double pi;
 	double suma=0;
@@ -21,8 +21,8 @@ int main(int argc, char **argv) {
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-	srand(time(NULL)); // zapewnia losowanie roznych liczb
 	if (rank != 0) {
+		srand((time(NULL))/rank); 
 		size=size-1;
 	    int begin = (rank-1)*n/size;
 		int end = (rank)*n/size;        
@@ -30,9 +30,9 @@ int main(int argc, char **argv) {
 			x = (double)rand()/RAND_MAX;
 			y = (double)rand()/RAND_MAX;
 			z = x*x+y*y;
-			if (z<=1) count++;
+			if (z<=1) wynik++;
 		}		
-		suma=(double)count/n*4;
+		suma=(double)wynik/n*4;
 		MPI_Reduce(&suma,    &pi, 1,  MPI_DOUBLE, MPI_SUM, 0,MPI_COMM_WORLD);
 	}
 	else {

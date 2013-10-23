@@ -13,7 +13,7 @@ main(int argc, char **argv)
 	double z;
 	double pi, wynik;
 
-	srand(time(NULL)); // zapewnia losowanie roznych liczb
+	srand(time(NULL)); 
 	wynik=0;
 	for ( i=0; i<n; i++) {
 		x = (double)rand()/RAND_MAX;
