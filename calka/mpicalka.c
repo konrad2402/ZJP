@@ -14,10 +14,10 @@ double f (double x){
 int main(int argc, char **argv) {
     clock_t start, stop;
 	start=clock();
-    int rank, namelen, size, n=N;
+    int rank, namelen, size, n=atoi(argv[1]);
     char host[100];
-    double x=X, time;
-    double y=Y;
+    double x=atoi(argv[2]), time;
+    double y=atoi(argv[3]);
     int a;
     double calka = 0 ;
     double h = (y-x)/n;
@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
 			calka += (f(x+a*h) + f(x+(a+1.0)*h))/2.0;
 		}
 		calka = calka * h;
-		printf("Calka dla x=(%d;%d) i n=%d wynosi: %f \n", X, Y, N, calka);
+		printf("\nCalka dla x=(%.0f;%.0f) i n=%d wynosi: %f \n", x, y, atoi(argv[1]), suma);
 	}
 	else {
 		if (rank != 0) {
@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
 		}
 		else {
 			MPI_Reduce(&calka, &suma, 1, MPI_DOUBLE, MPI_SUM, 0,MPI_COMM_WORLD);
-			printf("\nCalka dla x=(%d;%d) i n=%d wynosi: %f \n", X, Y, N, suma);
+			printf("\nCalka dla x=(%.0f;%.0f) i n=%d wynosi: %f \n", x, y, atoi(argv[1]), suma);
 			stop=clock();
 			time=(stop - start);
 			printf("Czas wykonania algorytmu to: %ld\n", stop-start);
