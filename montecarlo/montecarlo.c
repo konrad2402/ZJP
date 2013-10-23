@@ -3,13 +3,11 @@
 #include <math.h>
 #include<time.h>
 
-#define N 10000000
-
-main(int argc, char* argv)
+main(int argc, char **argv)
 {
     clock_t start, stop;
 	start=clock();
-	long int n=N; 
+	long int n=atoi(argv[1]); 
 	double x,y,timee;
 	int i; 
 	double z;
@@ -24,7 +22,7 @@ main(int argc, char* argv)
 		if (z<=1) wynik++;
 	}
 	pi=(double)wynik/n*4;
-	printf("\nPi wynosi: %f \n",pi);
+	printf("\nPi wynosi: %f dla n=%d \n",pi,atoi(argv[1]));
 	stop=clock();
     timee=(stop - start);
 	printf("Czas wykonania algorytmu to: %ld\n", stop-start);
