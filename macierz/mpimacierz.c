@@ -19,7 +19,7 @@ int main(int argc, char **argv){
 		double timee;
         int rank;
         int size;
-        int i,j,a=0,b=0;
+        int i,j,a=0,b=0,lol=0;
         long int n,tmp,k;  
         long int wycinek;
 		
@@ -30,14 +30,30 @@ int main(int argc, char **argv){
  
         n = atoi(argv[1]);
 
-		long int macierz1[n*n], wektor[n*n], wynik[n*n], pomocnicza[n*n], pomoc2[n*];
-		
         tmp = n%size;
         if(tmp!=0){
             tmp = size - tmp;
             n = n + tmp;
 		}
+		long int macierz1[n*n+5], wektor[n*n+5], wynik[n*n+5], pomocnicza[n*n+5], pomoc2[n*n+5];
+		pomocnicza[0] = 0;
 		wycinek = (n*n)/size;
+		for(j=0;j<n;j++){          
+           wektor[j]=j+1;
+           }
+		 if (rank == 0){ 
+				srand(time(NULL)); // zapewnia losowanie roznych liczb
+                int liczba = atoi(argv[1]); // n bez zer
+                        for (i = 0; i<n*n; i++){ 
+                                lol++;   
+                                if(i>=((n*n)-(n*tmp))) macierz1[i]=0;
+                                else if(lol-1<liczba) macierz1[i]=i;  
+                                else if (lol<=n) macierz1[i]=0; 
+                                else if(lol>=n+1){
+                                        lol=0; i--;
+                                }
+                        }
+                    }
 		
         MPI_Scatter( &macierz1 , wycinek  , MPI_INT , &pomoc2, wycinek  , MPI_INT , 0 , MPI_COMM_WORLD);
 		j = n/size;
@@ -50,13 +66,17 @@ int main(int argc, char **argv){
         MPI_Gather(&pomocnicza,j, MPI_INT, &wynik,j, MPI_INT, 0, MPI_COMM_WORLD);
         if (rank == 0){
 		/* WYPISANIE MACIERZY */
+        
 			int lala = atoi(argv[1]);
+			k = lala;
 			i = 0;
-			for(i;i<lala;i++){
 				j = 0;
-				for(j;j<lala;j++){
+			for(i;i<lala;i++){
+				for(j;j<k;j++){
 					wypisz(macierz1[j]);
 				}
+				k = k + lala + tmp;
+				j = j + tmp;
 				if(i == (lala/2)) printf("  *  ");
 				else printf("     ");	
 				wypisz(wektor[i]);
@@ -65,9 +85,9 @@ int main(int argc, char **argv){
 				wypisz(wynik[i]);
 				printf("\n");
 			}
-        }
 		stop=clock();
 		timee=(stop - start);
 		printf("Czas wykonania algorytmu to: %ld\n", stop-start);
+		}
         return 0;
 }

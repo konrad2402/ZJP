@@ -1,4 +1,4 @@
-all: macierz run 
+all: macierz mpimacierz
 
 macierz: macierz.o
 	gcc -o macierz macierz.c -lm
@@ -11,6 +11,7 @@ mpimacierz.o: mpimacierz.c
 	mpicc -c mpimacierz.c -lm
 
 run:
+	mpirun -np 4 mpimacierz 7
 	./macierz 400
 	
 clear:
