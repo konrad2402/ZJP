@@ -1,5 +1,5 @@
 #CAŁKA
-
+* Do rozwiązania załączam wykres stworzony z danych poniżej.
 #1. Testy całki dla x=(-2;2):
 #	N			Czas
 *	10000		0

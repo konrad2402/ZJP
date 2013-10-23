@@ -1,5 +1,5 @@
 #Montecarlo
-
+* Do rozwiązania załączam wykres stworzony z danych poniżej.
 #1. Testy montecarlo:
 *	N				Czas
 *	100000		 	0
