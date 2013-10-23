@@ -4,15 +4,13 @@
 #include "mpi.h"
 #include<time.h>
 
-#define N 1000000
-
 int main(int argc, char **argv) {
     clock_t start, stop;
 	start=clock();
 	int rank,timee;
 	int i;
 	int size;
-	long int n=N;
+	long int n=atoi(argv[1]);
 	double x,y;
 	int count=0;
 	double z;
@@ -39,7 +37,7 @@ int main(int argc, char **argv) {
 	}
 	else {
 		MPI_Reduce(&suma,    &pi, 1,  MPI_DOUBLE, MPI_SUM, 0,MPI_COMM_WORLD);
-		printf("\nPi wynosi: %f\n",pi);   
+		printf("\nPi wynosi: %f dla n=%d\n" ,pi, atoi(argv[1]));   
 		stop=clock();
 		timee=(stop - start);
 		printf("Czas wykonania algorytmu to: %ld\n", stop-start); 

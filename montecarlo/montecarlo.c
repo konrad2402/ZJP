@@ -26,4 +26,5 @@ main(int argc, char **argv)
 	stop=clock();
     timee=(stop - start);
 	printf("Czas wykonania algorytmu to: %ld\n", stop-start);
+	return 0;
 }

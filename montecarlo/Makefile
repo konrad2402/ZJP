@@ -1,4 +1,4 @@
-all: montecarlo mpimontecarlo run 
+all: montecarlo mpimontecarlo run clear
 
 montecarlo: montecarlo.o
 	gcc -o montecarlo montecarlo.c -lm
@@ -11,8 +11,8 @@ mpimontecarlo.o: mpimontecarlo.c
 	mpicc -c mpimontecarlo.c -lm
 
 run:
-	mpirun -np 4 ./mpimontecarlo
-	./montecarlo
+	mpirun -np 4 ./mpimontecarlo 100000
+	./montecarlo 100000
 	
 clear:
 	rm -r *.o
