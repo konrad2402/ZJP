@@ -2,15 +2,27 @@
 #include <stdlib.h>
 #include "mpi.h"
 
+int randome(){
+	int a = rand()%10;
+	return a;
+}
+void wypisz(long int x){
+	if (x >= 1000) printf("%ld ", x);
+	else if (x >= 100) printf("%ld  ", x);
+	else if (x >= 10) printf("%ld   ", x);
+	else printf("%ld    ", x);
+}
+
 int main(int argc, char **argv){
 		clock_t start, stop;
 		start=clock();
 		double timee;
         int rank;
         int size;
-        int i,j;
+        int i,j,a=0,b=0;
         long int n,tmp,k;  
-        long int wycinek=2;
+        long int wycinek;
+		
 		
         MPI_Init(&argc, &argv);        
         MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -18,49 +30,42 @@ int main(int argc, char **argv){
  
         n = atoi(argv[1]);
 
+		long int macierz1[n*n], wektor[n*n], wynik[n*n], pomocnicza[n*n], pomoc2[n*];
+		
         tmp = n%size;
         if(tmp!=0){
             tmp = size - tmp;
             n = n + tmp;
 		}
-        long int macierz1[l][l], wektor[l], wynik[l];
-	srand(time(NULL)); // zapewnia losowanie roznych liczb
-/* LOSOWANIE LICZB I WYPELNIENIE MACIERZY */
-	for(i;i<x;i++){
-		long int j = 0;
-		wektor[i] = randome();
-		for(j;j<x;j++){
-			macierz1[i][j] = randome();			
-		}
-	}
-	for(k = 0; k<x; k++){
-		for(i = 0;i<x;i++){
-			long int j = 0;
-			wynik[k] = 0;
-			int suma = 0;
-			for(j;j<x;j++){	
-				xx = macierz1[k][j] * wektor[j];
-//				printf("%ld XXX %ld\n", macierz1[k][i], wektor[i][j]);
-				wynik[k] = wynik[k] + xx;
+		wycinek = (n*n)/size;
+		
+        MPI_Scatter( &macierz1 , wycinek  , MPI_INT , &pomoc2, wycinek  , MPI_INT , 0 , MPI_COMM_WORLD);
+		j = n/size;
+        for (i=0; i<wycinek; i++){
+                if(a>=n) {a=0; b++; }
+                pomocnicza[b]=pomocnicza[b]+(pomoc2[i]*wektor[a]);
+                a++;
+        }
+		
+        MPI_Gather(&pomocnicza,j, MPI_INT, &wynik,j, MPI_INT, 0, MPI_COMM_WORLD);
+        if (rank == 0){
+		/* WYPISANIE MACIERZY */
+			int lala = atoi(argv[1]);
+			i = 0;
+			for(i;i<lala;i++){
+				j = 0;
+				for(j;j<lala;j++){
+					wypisz(macierz1[j]);
+				}
+				if(i == (lala/2)) printf("  *  ");
+				else printf("     ");	
+				wypisz(wektor[i]);
+				if(i == (lala/2)) printf("  =  ");
+				else printf("     ");	
+				wypisz(wynik[i]);
+				printf("\n");
 			}
-		}	
-	}
-		printf("\n");
-	/* WYPISANIE MACIERZY */
-	i = 0;
-	for(i;i<x;i++){
-		long int j = 0;
-		for(j;j<x;j++){
-			wypisz(macierz1[i][j]);
-		}
-		if(i == (x/2)) printf("  *  ");
-		else printf("     ");	
-		wypisz(wektor[i]);
-		if(i == (x/2)) printf("  =  ");
-		else printf("     ");	
-		wypisz(wynik[i]);
-		printf("\n");
-	}
+        }
 		stop=clock();
 		timee=(stop - start);
 		printf("Czas wykonania algorytmu to: %ld\n", stop-start);
