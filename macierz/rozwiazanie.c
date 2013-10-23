@@ -18,12 +18,12 @@ void wypisz(long int x){
 int main(int argc, char **argv){
 		int rank; // dany proces
 		int tmp;// do sprawdzenia czy ilosc procesow jest rowna wielkosci macierzy
-		int namelen;
+		int namelen, wycinek; // do przekazania fragmentu tablicy
 		long int x;
-		int numprocs; // ilosc procesow
-		long int i = 0, l=x+2;
+		int size; // ilosc procesow
+		long int i = 0, l=x+30;
 		int k = 0, xx = 0;
-		long int macierz1[l][l], wektor[l], wynik[l][l];
+		long int macierz1[l][l], wektor[l], wynik[l], pomocnicza[l];
 		srand(time(NULL)); // zapewnia losowanie roznych liczb
 
 		/* Message tag */
@@ -32,12 +32,10 @@ int main(int argc, char **argv){
         x = atoi(argv[1]);
 		MPI_Init(&argc, &argv);
 		MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-		MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-		tmp = x%numprocs; // wyliczenie różnicy między ilosica procesow i wielkosica macierzy
+		MPI_Comm_size(MPI_COMM_WORLD, &size);
+		tmp = x%size; // wyliczenie różnicy między ilosica procesow i wielkosica macierzy
 		if(tmp != 0) {
-		printf("%d   tmp\n", tmp);
-			tmp = numprocs-tmp;		
-		printf("%d   tmp\n", tmp);	
+			tmp = size-tmp;		
 		}
 		i = 0;
 		if(rank == 0){
@@ -56,24 +54,32 @@ int main(int argc, char **argv){
 					wektor[i] = 0;
 					for(j;j<x;j++){
 						macierz1[i][j] = 0;
+						i++;
 					}
 				}
 			}
 		}
-		
+		wycinek = i/size;
 	/* LICZENIE MACIERZY */
 		for(k = 0; k<x; k++){
 			int begin = (rank-1)*n/size;
 			int end = (rank)*n/size;  
 			for(i = begin; i < end; i++){
 				int j = 0;
-				wynik[k][i] = 0;
+				pomocnicza[k] = 0;
 				for(j;j<x;j++){
 					xx = macierz1[k][j] * wektor[j];
-					wynik[k][i] = wynik[k][i] + xx;
+					pomocnicza[k] = pomocnicza[k] + xx;
 				}
 			}
 		}
+		MPI_Scatter( &pomocnicza , wycinek  , MPI_INT , &wynik, wycinek  , MPI_INT , 0 , MPI_COMM_WORLD);
+		if(rank == 0){
+			int temp;
+			
+			MPI_Gather(&skladowe,temp, MPI_INT, &tabC,temp, MPI_INT, 0, MPI_COMM_WORLD);
+		
+		
 				printf("\n");
 		/* WYPISANIE MACIERZY 
 		i = 0;
